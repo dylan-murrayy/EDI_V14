@@ -17,9 +17,7 @@ class MyEventHandler(AssistantEventHandler):
 
     def on_text(self, text: Text, metadata: dict):
         # Access the 'text' attribute of the Text object
-        self.assistant_message += text.text
-
-        # Update the chat message
+        self.assistant_message += text.text  # This should work if 'text.text' exists
         with self.chat_container:
             if self.message_placeholder is None:
                 with st.chat_message("assistant"):
@@ -27,10 +25,8 @@ class MyEventHandler(AssistantEventHandler):
             self.message_placeholder.markdown(self.assistant_message)
 
     def on_text_delta(self, delta: TextDelta, metadata: dict):
-        # Access the 'text' attribute of the TextDelta object
-        self.assistant_message += delta.text
-
-        # Update the chat message
+        # Access the 'delta' attribute of the TextDelta object
+        self.assistant_message += delta.delta  # Use 'delta.delta' instead of 'delta.text'
         with self.chat_container:
             if self.message_placeholder is None:
                 with st.chat_message("assistant"):
