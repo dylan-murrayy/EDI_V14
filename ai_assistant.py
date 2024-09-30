@@ -11,6 +11,7 @@ from PIL import Image
 # Define MyEventHandler class here
 class MyEventHandler(AssistantEventHandler):
     def __init__(self, chat_container):
+        super().__init__()  # Call the base class initializer
         self.chat_container = chat_container
         self.assistant_message = ''
 
@@ -34,6 +35,9 @@ class MyEventHandler(AssistantEventHandler):
 
     def on_error(self, error: Exception):
         st.error(f"An error occurred: {error}")
+
+# Rest of your ai_assistant_tab function remains the same
+
 
 def ai_assistant_tab(df_filtered):
     # Custom CSS to make the input bar sticky
