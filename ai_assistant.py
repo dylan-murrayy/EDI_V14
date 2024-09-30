@@ -11,32 +11,32 @@ from PIL import Image
 # Define MyEventHandler class here
 class MyEventHandler(AssistantEventHandler):
     def __init__(self, chat_container):
-        super().__init__()  # Call the base class initializer
+        super().__init__()
         self.chat_container = chat_container
         self.assistant_message = ''
 
-    def on_text(self, text: str):
+    def on_text(self, text: str, metadata: dict):
         self.assistant_message += text
         with self.chat_container:
             with st.chat_message("assistant"):
                 st.write(self.assistant_message)
 
-    def on_text_delta(self, delta: str):
+    def on_text_delta(self, delta: str, metadata: dict):
         self.assistant_message += delta
         with self.chat_container:
             with st.chat_message("assistant"):
                 st.write(self.assistant_message)
 
-    def on_tool_call(self, tool_call: ToolCall):
+    def on_tool_call(self, tool_call: ToolCall, metadata: dict):
         pass  # Implement if you need to handle tool calls
 
-    def on_tool_call_delta(self, delta: ToolCallDelta):
+    def on_tool_call_delta(self, delta: ToolCallDelta, metadata: dict):
         pass  # Implement if you need to handle tool call deltas
 
-    def on_error(self, error: Exception):
+    def on_error(self, error: Exception, metadata: dict = None):
         st.error(f"An error occurred: {error}")
 
-# Rest of your ai_assistant_tab function remains the same
+
 
 
 def ai_assistant_tab(df_filtered):
