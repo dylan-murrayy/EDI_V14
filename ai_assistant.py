@@ -8,24 +8,34 @@ from openai.types.beta.threads import Text, TextDelta
 from openai.types.beta.threads.runs import ToolCall, ToolCallDelta
 from PIL import Image
 
-# Define MyEventHandler class here
 class MyEventHandler(AssistantEventHandler):
     def __init__(self, chat_container):
         super().__init__()
         self.chat_container = chat_container
         self.assistant_message = ''
+        self.message_placeholder = None  # Placeholder for updating the assistant message
 
-    def on_text(self, text: str, metadata: dict):
-        self.assistant_message += text
-        with self.chat_container:
-            with st.chat_message("assistant"):
-                st.write(self.assistant_message)
+    def on_text(self, text: Text, metadata: dict):
+        # Access the 'text' attribute of the Text object
+        self.assistant_message += text.text
 
-    def on_text_delta(self, delta: str, metadata: dict):
-        self.assistant_message += delta
+        # Update the chat message
         with self.chat_container:
-            with st.chat_message("assistant"):
-                st.write(self.assistant_message)
+            if self.message_placeholder is None:
+                with st.chat_message("assistant"):
+                    self.message_placeholder = st.empty()
+            self.message_placeholder.markdown(self.assistant_message)
+
+    def on_text_delta(self, delta: TextDelta, metadata: dict):
+        # Access the 'text' attribute of the TextDelta object
+        self.assistant_message += delta.text
+
+        # Update the chat message
+        with self.chat_container:
+            if self.message_placeholder is None:
+                with st.chat_message("assistant"):
+                    self.message_placeholder = st.empty()
+            self.message_placeholder.markdown(self.assistant_message)
 
     def on_tool_call(self, tool_call: ToolCall, metadata: dict):
         pass  # Implement if you need to handle tool calls
@@ -35,7 +45,6 @@ class MyEventHandler(AssistantEventHandler):
 
     def on_error(self, error: Exception, metadata: dict = None):
         st.error(f"An error occurred: {error}")
-
 
 
 
